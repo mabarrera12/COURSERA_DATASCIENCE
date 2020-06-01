@@ -9,12 +9,20 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Class Notes
 
-TABER SI EN ALGUN MOMENTO LO LOGROOOO
+> There are different types of classes of objetcs  
+* character  
+* numeric  
+* integer  
+* complex  
+* Logical  
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+
+```{r}
+x<-1
+print(x)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
