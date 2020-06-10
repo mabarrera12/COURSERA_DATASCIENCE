@@ -1,5 +1,5 @@
 ---
-title: "Notas_Clase"
+title: "Class Notes"
 author: "Alejandra Barrera"
 date: "6/1/2020"
 output: html_document
@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 Notas para la futura Alejandra. Recuerda **SIEMPRE** estos pasos: Guardar->Commit->Push (asi se hayan desaparecido los archivos) y ya. Puedes usar esta pagina donde estan las referencias de R Markdown.
 
 [PAGINA_Referencias](https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
+
+Para borrar la consola cntrl+L y para borrar todas las variables rm(list=ls()). Para tener informacion de una funcion se pone "?_funcion si parentesis_"
 
 > There are different types of classes of objetcs  
 - character  
@@ -74,6 +76,8 @@ m<- matrix(1:6,nrow=2, ncol=3) # Se construye column wise
 print(m)
 dim(m)
 attributes(m) #Todo lo que se le pueda sacar
+m[1,] #Para extraer solo la primera fila
+
 ```
 Tambien pueden tener nombres:
 ```{r}
@@ -117,16 +121,100 @@ ncol(x)
 
 ### Reading Data
 Hay diferentes funciones para leer los datos  
-- read.table, read.csv  
+- read.table, read.csv  Son iguales, la unica difrencia es que _read.table_ el separador por defecto es un espacio y en _read.csv_ es una coma  
 - readLines, para leer lineas de texto    
 - source, Para leer R code files  
 - dget, para leer R code files  
 - load, para cargar los datos  
 - unserialize, para leer en forma binaria
 
+#### read.table  
+Cuando se van a leer bases de datos muy grandes, se pueden hacer unas optimizaciones: 
+* Poner comment.char="" si no hay comentarios en el archivo
+* Especificar colClasses. Una forma de encontrar las clases de cada columna es:
+ + initial<- read.table("Nombredelarchivo.txt", nrows=100)  
+ + classes <- sapply(initial,class)  
+ + tabAll< read.table("Nombredelarchivo.txt", colClasses=classes) 
+* Especificar nrows, se puede sobre estimar  
+* Se puede hacer el calculo de la memoria que va a gastar.
 
+### Connection with outside world  
+* file, opens a connection to a file
+* url, opens a connection to url  
+* gzfile and bzfile opens a connection with compresed files
 
+### Subsetting   
+* $ is used to extract elements of a list or data frame by name
+* [] y [[]] sirven para extraer elementos. [[]] es mas usado para listas. [] devuelve un elemento del mismo tipo. Es decir, si el elemento original era una lista este tambien va a ser una lista.
+```{r}
+x <- list(foo=1:4, bar=0.6) #lista
+x[1] #Lista
+x[[1]]
+class(x[2])
+class(x[[2]])
+x$foo
+x[[1]][[2]] #extraer un elemento de la lista
+```
 
+### NA Values
+Para remover los valores que no son numericos:
+```{r}
+x<- c(1,2,NA,4,NA,5)
+bad <-is.na(x)
+x[bad]
+x[!bad]
 
+```
+## Operaciones de Vectores  
+When given two vectors of the same length, R simply performs the specified arithmetic operation (`+`, `-`,
+| `*`, etc.) element-by-element. If the vectors are of different lengths, R 'recycles' the shorter vector
+| until it is the same length as the longer vector.
+```{r}
+x<-1:4; y<-6:9
+x+y
+x/y #element wise
+x*y #element wise
+x%*% y #true matriz multiplication
+```
+# Semana 2_ Control Structures
+## If Else
+```{r, eval=FALSE}
+if(<condition>) {
+  ## do something
+} else / else if {
+  ## do something else
+}
+```
+## for
+Se puede usar _next_ para cambiar de iteracion o para salir.
+```{r}
+for(i in 1:10){
+  print(i)
+}
+## otra forma de escribirlo
+for(i in 1:4) print(i)
+## Para crear una sequencia
+seq(5)
+```
 
+## While
+Se puede reemplazar con un _repeat_ pero hay que usar un _break_
+```{r}
+count<-0
+while(count<10) {
+  print(count)
+  count<-count+1
+}
+```
+
+## Functions  
+
+```{r}
+above_10 <- function (x, n=10){
+  use <- x>n
+  x[use]
+  # Se puede especificar default values.
+}
+```
+#
 
