@@ -1,0 +1,116 @@
+---
+title: "Notas de Clase"
+author: "Alejandra Barrera"
+date: "6/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<style type="text/css">
+.main-container {
+  max-width: auto;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+</style>
+
+## Semana 2
+
+Notas para la futura Alejandra. Recuerda **SIEMPRE** estos pasos: Guardar->Commit->Push (asi se hayan desaparecido los archivos) y ya. Puedes usar esta pagina donde estan las referencias de R Markdown.
+
+### __*Estructuras de control*__ {.tabset}
+
+#### If Else  
+```{r}
+condition<-TRUE
+if(condition==TRUE) {
+  ## do something
+  print(TRUE)
+} else #else if 
+  { print(FALSE)
+  ## do something else
+}
+```
+#### for  
+Se puede usar _next_ para cambiar de iteracion o para salir.
+```{r}
+for(i in 1:10){
+  print(i)
+}
+## otra forma de escribirlo
+for(i in 1:4) print(i)
+## Para crear una sequencia
+seq(5)
+```
+
+#### While  
+Se puede reemplazar con un _repeat_ pero hay que usar un _break_
+```{r}
+count<-0
+while(count<10) {
+  print(count)
+  count<-count+1
+}
+```
+### {-}  
+
+***
+> *Para hacer Debugging:*  
+
+  * traceback: where does the error occured
+  * debug:
+  * browser: cuando se llega a esta linea se empieza a correr linea por linea.
+  * trace: 
+  *recover: 
+
+
+
+### __*Reading Data, subsetting, Na Values*__
+<details>  
+  <summary> Click to expand! </summary>  
+#### Connection with outside world  
+* file, opens a connection to a file
+* url, opens a connection to url  
+* gzfile and bzfile opens a connection with compresed files
+
+#### Subsetting   
+* $ is used to extract elements of a list or data frame by name
+* [] y [[]] sirven para extraer elementos. [[]] es mas usado para listas. [] devuelve un elemento del mismo tipo. Es decir, si el elemento original era una lista este tambien va a ser una lista.
+```{r}
+x <- list(foo=1:4, bar=0.6) #lista
+x[1] #Lista
+x[[1]]
+class(x[2])
+class(x[[2]])
+x$foo
+x[[1]][[2]] #extraer un elemento de la lista
+```
+#### NA Values
+Para remover los valores que no son numericos:
+```{r}
+x<- c(1,2,NA,4,NA,5)
+bad <-is.na(x)
+x[bad]
+x[!bad]
+```
+Hay diferentes funciones para leer los datos  
+- read.table, read.csv  Son iguales, la unica difrencia es que _read.table_ el separador por defecto es un espacio y en _read.csv_ es una coma  
+- readLines, para leer lineas de texto    
+- source, Para leer R code files  
+- dget, para leer R code files  
+- load, para cargar los datos  
+- unserialize, para leer en forma binaria
+
+#### read.table  
+Cuando se van a leer bases de datos muy grandes, se pueden hacer unas optimizaciones: 
+* Poner comment.char="" si no hay comentarios en el archivo
+* Especificar colClasses. Una forma de encontrar las clases de cada columna es:
+ + initial<- read.table("Nombredelarchivo.txt", nrows=100)  
+ + classes <- sapply(initial,class)  
+ + tabAll< read.table("Nombredelarchivo.txt", colClasses=classes) 
+* Especificar nrows, se puede sobre estimar  
+* Se puede hacer el calculo de la memoria que va a gastar.
+
+</details>  
