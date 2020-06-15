@@ -22,8 +22,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Notas para la futura Alejandra. Recuerda **SIEMPRE** estos pasos: Guardar->Commit->Push (asi se hayan desaparecido los archivos) y ya. Puedes usar esta pagina donde estan las referencias de R Markdown.
 
-[PAGINA_Referencias](https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
-
+[PAGINA_Referencias](https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)   
+[NOTAS DE LA SEMANA 2](./Notas_Clase_sem2.html)  
 Para borrar la consola cntrl+L y para borrar todas las variables rm(list=ls()). Para tener informacion de una funcion se pone "?_funcion si parentesis_"
 
 > There are different types of classes of objetcs  

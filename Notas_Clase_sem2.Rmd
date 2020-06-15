@@ -1,5 +1,5 @@
 ---
-title: "Notas de Clase"
+title: "Class Notes"
 author: "Alejandra Barrera"
 date: "6/14/2020"
 output: html_document
@@ -18,7 +18,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Semana 2
 
-Notas para la futura Alejandra. Recuerda **SIEMPRE** estos pasos: Guardar->Commit->Push (asi se hayan desaparecido los archivos) y ya. Puedes usar esta pagina donde estan las referencias de R Markdown.
+Notas para la futura Alejandra. Recuerda **SIEMPRE** estos pasos: Guardar->Commit->Push (asi se hayan desaparecido los archivos) y ya. Puedes usar esta pagina donde estan las referencias de R Markdown.  
+[NOTAS DE LA SEMANA 1](./Notas_Clase.html)  
+[Markdown Sheets](https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
 
 ### __*Estructuras de control*__ {.tabset}
 
@@ -59,17 +61,17 @@ while(count<10) {
 ***
 > *Para hacer Debugging:*  
 
-  * traceback: where does the error occured
-  * debug:
-  * browser: cuando se llega a esta linea se empieza a correr linea por linea.
-  * trace: 
-  *recover: 
+  * traceback: where does the error occured. Devuelve donde ocurrio el error hay que usarla inmediatamente cuando sale un error.
+  * debug y browser: cuando se llega a esta linea se empieza a correr linea por linea. Permite evaluar uno a uno.
+  * trace 
+  * recover: permite ver el ambiente (environment en que estaba la variable)
 
 
 
 ### __*Reading Data, subsetting, Na Values*__
 <details>  
   <summary> Click to expand! </summary>  
+  
 #### Connection with outside world  
 * file, opens a connection to a file
 * url, opens a connection to url  
@@ -95,22 +97,26 @@ bad <-is.na(x)
 x[bad]
 x[!bad]
 ```
-Hay diferentes funciones para leer los datos  
-- read.table, read.csv  Son iguales, la unica difrencia es que _read.table_ el separador por defecto es un espacio y en _read.csv_ es una coma  
-- readLines, para leer lineas de texto    
-- source, Para leer R code files  
-- dget, para leer R code files  
-- load, para cargar los datos  
-- unserialize, para leer en forma binaria
+Hay diferentes funciones para leer los datos:  
+
+  * read.table, read.csv  Son iguales, la unica difrencia es que _read.table_ el separador por defecto es un espacio y en _read.csv_ es una coma  
+* readLines, para leer lineas de texto    
+* source, Para leer R code files  
+* dget, para leer R code files  
+* load, para cargar los datos  
+* unserialize, para leer en forma binaria
 
 #### read.table  
 Cuando se van a leer bases de datos muy grandes, se pueden hacer unas optimizaciones: 
-* Poner comment.char="" si no hay comentarios en el archivo
+
+  * Poner comment.char="" si no hay comentarios en el archivo  
 * Especificar colClasses. Una forma de encontrar las clases de cada columna es:
- + initial<- read.table("Nombredelarchivo.txt", nrows=100)  
- + classes <- sapply(initial,class)  
- + tabAll< read.table("Nombredelarchivo.txt", colClasses=classes) 
-* Especificar nrows, se puede sobre estimar  
+```{r, eval=FALSE}
+ initial<- read.table("Nombredelarchivo.txt", nrows=100)  
+ classes <- sapply(initial,class)  
+ tabAll< read.table("Nombredelarchivo.txt", colClasses=classes) 
+```
+  * Especificar nrows, se puede sobre estimar  
 * Se puede hacer el calculo de la memoria que va a gastar.
 
 </details>  
