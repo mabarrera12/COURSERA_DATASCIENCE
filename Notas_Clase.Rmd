@@ -208,7 +208,7 @@ while(count<10) {
 ```
 
 ## Functions  
-
+Para ver los argumentos de una funcion se usa args(Nombre de la funcion)
 ```{r}
 above_10 <- function (x, n=10){
   use <- x>n
@@ -216,5 +216,13 @@ above_10 <- function (x, n=10){
   # Se puede especificar default values.
 }
 ```
-#
+# Files And Folder functions
+Mirar si una carpeta existe:  
+* dir.exists("Nombre de la carpeta")
+
+# Texto
+Para convertir vectores a caracteres unidos
+```{r}
+paste(as.character(c(rep(0,times=3-length(1)),1)), collapse ="")
+```
 
