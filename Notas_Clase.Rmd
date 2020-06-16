@@ -181,7 +181,15 @@ x<-list(a=matrix(1:4, 2,2), b=matrix(1:6,3,2))
 print(x)
 lapply(x, function(elt) elt[,1])
 ```
-_apply_ se usa para evaluar una fucnion en los margenes de un arreglo.
+Si se tiene una lista, se va a aplicar la funcion a toda la lista.  
+```{r}
+library(datasets)
+data(iris)
+iris[1:5,]
+lapply(iris,mean)
+
+```
+_apply_ se usa para evaluar una funcion en los margenes de un arreglo.
 ```
 str(apply)
 function(X, margin, function, ...)
@@ -222,6 +230,10 @@ function(X, index, FUN=NUL,..., SIMPLIFY=TRUE )
 x<-c(rnorm(10), runif(10),rnorm(10))
 f<-gl(3,10) #Genera los niveles de los factores gl(n,k) n es el numero de niveles y k el numero de replicas
 tapply(x,f,mean)
+print("Otro ejemplo")
+data("mtcars")
+mtcars[1:5,]
+tapply(mtcars$mpg,mtcars$cyl,mean)
 ```
 
 _split_ takes a vector or other objetc and splits it into groups determined by a factor of list of factors

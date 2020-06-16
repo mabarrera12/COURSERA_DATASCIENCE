@@ -2,7 +2,8 @@
 title: "Class Notes"
 author: "Alejandra Barrera"
 date: "6/14/2020"
-output: html_document
+output: html_document 
+
 ---
 
 ```{r setup, include=FALSE}
@@ -14,15 +15,69 @@ knitr::opts_chunk$set(echo = TRUE)
   margin-left: 50px;
   margin-right: 50px;
 }
+
+* {box-sizing: border-box}
+body {font-family: "Lato", sans-serif;}
+
+/* Style the tab */
+.tab {
+  float: left;
+  border: 1px solid #ccc;
+  background-image: linear-gradient(#4A8FCA,#A8D7FF);
+  width: 20%;
+  height: 500px;
+  
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  display: block;
+  background-color: inherit;
+  color: black;
+  padding: 10px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Create an active/current "tab button" class */
+.tab button.active {
+  background-color: #337AB7;
+}
+
+/* Style the tab content */
+.tabcontent {
+  float: left;
+  padding: 0px 12px;
+  border: 1px solid #ccc;
+  width: 80%;
+  border-left: none;
+  height: 500px;
+  display: none;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+/* Clear floats after the tab */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
 </style>
 
-## Semana 2
+## __Semana 2__
 
 Notas para la futura Alejandra. Recuerda **SIEMPRE** estos pasos: Guardar->Commit->Push (asi se hayan desaparecido los archivos) y ya. Puedes usar esta pagina donde estan las referencias de R Markdown.  
 [NOTAS DE LA SEMANA 1](./Notas_Clase.html)  
-[Markdown Sheets](https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
+[Markdown Sheets](https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)  
+[Markdown Info](https://bookdown.org/yihui/rmarkdown/r-code.html)  
 
-### __*Estructuras de control*__ {.tabset}
+### __*Estructuras de control*__ {.tabset .tabset-pills}
 
 #### If Else  
 ```{r}
@@ -62,11 +117,9 @@ while(count<10) {
 > *Para hacer Debugging:*  
 
   * traceback: where does the error occured. Devuelve donde ocurrio el error hay que usarla inmediatamente cuando sale un error.
-  * debug y browser: cuando se llega a esta linea se empieza a correr linea por linea. Permite evaluar uno a uno.
+  * debug y browser: cuando se llega a esta linea se empieza a correr linea por linea. Permite evaluar uno a uno. Para salir del debug se pone Q o c
   * trace 
   * recover: permite ver el ambiente (environment en que estaba la variable)
-
-
 
 ### __*Reading Data, subsetting, Na Values*__
 <details>  
@@ -120,3 +173,89 @@ Cuando se van a leer bases de datos muy grandes, se pueden hacer unas optimizaci
 * Se puede hacer el calculo de la memoria que va a gastar.
 
 </details>  
+
+### __*Funciones utiles*__
+<div class="tab">
+  <button class="tablinks" onmouseover="openCity(event, 'str')"><i>str</i></button>
+  <button class="tablinks" onmouseover="openCity(event, 'summary')"><i>Summary</i></button>
+</div>
+
+<div id="str" class="tabcontent">
+#### __*str*__  
+Compactly display the internal structure of an R object. Gives the function arguments for function.  
+```{r}
+str(lm)
+x<-5
+str(x)
+library(datasets)
+str(airquality)
+
+```
+</div>
+
+<div id="summary" class="tabcontent">
+#### __*summary*__  
+Produces a summary of the results  
+```{r}
+str(summary)
+x<-5
+summary(x)
+```
+</div>
+
+<div class="clearfix"></div>
+
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
+
+
+### __*Simulation*__  
+There are different functions for probability distribution in R:  
+
+  * *rnorm* generates random variable Normal variables with a given mean and standard deviation   
+  * *dnorm*  evaluate the normal probability density with a given mean or sd at a point  
+  * *pnorm* evaluate the cumulative distribution function for a norma distribution  
+  * *rpois* generate random poisson variates with a given rate  
+  
+Hay diferentes functiones o letras asociadas: *p*: distribucion cumulativa, *q*: funcion cuantil, *r*: generador de numeros aleatorios, *d*: densidad. En orden: rnorm, dnorm  
+
+```{r, echo=FALSE}
+str(rnorm)
+str(dnorm)
+str(pnorm)
+str(rpois)
+```
+Para reajustar o reestablecer el generador de numeros se utiliza `set.seed(1)`.  
+
+#### Random Sampling  
+The function `sample` draws ramdomly from a specified set of sclara objects allowing to sample from arbitry distributions.  
+```{r}
+str(sample) # con repeat se puede obtener numeros repetidos
+set.seed(1)
+sample(1:10,4)
+```
+
+
+
+
+
+
+
+
+
+
+
+
