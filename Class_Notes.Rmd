@@ -291,7 +291,7 @@ while(count<10) {
 }
 ```
 
-### __*Funciones utiles*__ {.tabset .tabset-pills}
+### __*Funciones*__ {.tabset .tabset-pills}
 #### Intro  
 To see the source code , just type the function without parenthesis. To see the arguments type `args(function)`  
 
@@ -304,6 +304,16 @@ To see the source code , just type the function without parenthesis. To see the 
     + `any()`  
   * `which()`  
   
+#### Forma general
+```{r}
+above_10 <- function (x, n=10){
+  use <- x>n
+  x[use]
+  # Se puede especificar default values.
+}
+above_10(c(1,4,6,8,99))
+```
+
 #### Funciones Anonimas  
 ```{r}
 evaluate <- function(func, dat){func(dat)}
@@ -478,21 +488,115 @@ sapply(s, function(x) {colMeans(x[, c("Ozone", "Solar.R", "Wind")],na.rm = TRUE)
 ```
 
 
-### __*Regular Expressions*__ {.tabset .tabset-pills}
+### __*Regular Expressions - Texto*__ {.tabset .tabset-pills}
 #### Intro
-  * `grep()` `grepl()
+  * Texto
+    + `paste()`
+    + `strcmp()`
+    + `tolower()`-`toUpper()`
+    + `strsplit()`
+  * `grep()` `grepl()`
   * `sapply()`
   * `apply()`
   * `mapply()` `vectorize()`
   * `tapply()`
   * `split()`  
 
-#### Grep  
+#### Texto - General
+To read text files use `readLines(...txt)`
+ * Para convertir vectores a caracteres unidos
+```{r}
+paste(as.character(c(rep(0,times=3-length(1)),1)), collapse ="")
+paste0(as.character(c(rep(0,times=3-length(1)),1)), collapse = "")
+```
+  * Para comparar dos strings  
+```{r}
+library(pracma)
+strcmpi("Hola","hola") #case insensitive
+strcmp("Hola","hola")  #case sensitive
+```
+  * Para poner todas las letras en minuscula
+```{r}
+tolower("HOLA")
+```
+  * Para separar de acuerdo a un indicador
+```{r}
+testName <- "HOLA.Como.Estas"
+strsplit(testName,"\\.")
+```
+  * Para sustituir un caracter
+```{r}
+gsub("[[:punct:]]"," ",testName) #removes all puntuaction
+gsub("[.]"," ",testName) #tambien se puede [-]
+```
+
+#### Metacharacters:
+[Metacharacters](http://uc-r.github.io/regex_syntax)
+  * `^` para buscar al inicio
+  * $ final
+  * [Bb] permitir las mayusculas y minusculas.
+  * ? Para hasta el primer match. Ver regexpr()
+
   
+```{r}
+library(datasets)
+grep("^New", state.name) #Index
+grep("^New", state.name, value = TRUE) #Values
+```
+
+#### grep() - grepl()  
+```{r, include=FALSE}
+homicides<-readLines("Course_3_GettingAndCleaningData/Ejercicio_Semana4_curso3/Regular expressions/homicides.txt")
+```
+`grep()` is used to match a label into a character vector. Returns a vector of the indices of the elements of x that yielded a match. By setting `value = TRUE` the output is the real value.  
+```{r, echo = FALSE}
+str(grep)
+```
+```{r}
+g<- grep("Cause: shooting", homicides);length(g)
+g<- grep("Cause: [Ss]hooting", homicides);length(g) #capital insensitive
+```
   
-  
+The function `grepl()` works much like grep() except that it differs in its return value. grepl() returns a logical vector indicating which element of a character vector contains the match.  
+```{r, echo = FALSE}
+str(grepl)
+```
+```{r}
+g<-grepl("^New", state.name);g
+state.name[g]
+```
+
+#### regexpr() - regexec()
+```{r, echo = FALSE}
+str(regexpr)
+```
+The regexpr() function gives you the (a) *index* into each string where the match begins and the (b) *length* of the match for that string. regexpr() only gives you the first match of the string (reading left to right). gregexpr() will give you all of the matches in a given string if there are is more than one match.
+
+```{r}
+regexpr("<dd>[F|f]ound(.*)</dd>", homicides[1]); r<-regexpr("<dd>[F|f]ound(.*)</dd>", homicides[1])
+regmatches(homicides[1],r)
+regexpr("<dd>[F|f]ound(.*?)</dd>", homicides[1]); r<-regexpr("<dd>[F|f]ound(.*?)</dd>", homicides[1])
+regmatches(homicides[1],r)
+```
+
+#### sub() - gsub()
+
+The regexec() function works like regexpr() except it gives you the indices for parenthesized subexpressions.
+```{r}
+r<-regexec("<dd>[F|f]ound on (.*?)</dd>", homicides[1])
+regmatches(homicides[1], r)
+```
+#### gsub() - sub()
+sub and gsub return a character vector of the same length and with the same attributes as x (after possible coercion to character).
+```{r}
+x <- substr(homicides[1], 177, 177 + 33 - 1); x
+sub("<dd>[F|f]ound on |</dd>", "", x)
+gsub("<dd>[F|f]ound on |</dd>", "", x)
+
+```
 ### __*Funciones creadas *__ {.tabset .tabset-pills}
 #### Text-Telegram
   * Returns a text with START at the begining and STOP at the end
 ```{r}
 telegram <- function(...){paste("START", ..., "STOP")}
+```

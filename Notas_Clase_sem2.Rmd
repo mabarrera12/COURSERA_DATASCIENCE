@@ -6,8 +6,9 @@ output: html_document
 
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE} 
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
 ```
 <style type="text/css">
 .main-container {
@@ -19,14 +20,14 @@ knitr::opts_chunk$set(echo = TRUE)
 * {box-sizing: border-box}
 body {font-family: "Lato", sans-serif;}
 
-/* Style the tab */
+/* Style the tab */ 
 .tab {
   float: left;
   border: 1px solid #ccc;
   background-image: linear-gradient(#4A8FCA,#A8D7FF);
   width: 20%;
   height: 500px;
-  
+   
 }
 
 /* Style the buttons inside the tab */
@@ -58,8 +59,8 @@ body {font-family: "Lato", sans-serif;}
   height: 500px;
   display: none;
   white-space: nowrap;
-  overflow-x: auto;
   overflow-y: auto;
+  overflow-x: auto;
 }
 
 /* Clear floats after the tab */
@@ -68,14 +69,268 @@ body {font-family: "Lato", sans-serif;}
   clear: both;
   display: table;
 }
+
+.demobox {
+  background-color: #cfc ;
+}
 </style>
 
 ## __Semana 2__
 
+<div style="background-color: #E0F7FA ; padding: 5px; box-shadow: 2px 2px 2px grey">
+<div id="demobox">
 Notas para la futura Alejandra. Recuerda **SIEMPRE** estos pasos: Guardar->Commit->Push (asi se hayan desaparecido los archivos) y ya. Puedes usar esta pagina donde estan las referencias de R Markdown.  
+</div>
+</div style>
+
+&nbsp; 
+
 [NOTAS DE LA SEMANA 1](./Notas_Clase.html)  
 [Markdown Sheets](https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)  
 [Markdown Info](https://bookdown.org/yihui/rmarkdown/r-code.html)  
+[R Cheat Sheets](http://datasciencefree.com/basicR.pdf) 
+
+Para borrar la consola cntrl+L y para borrar todas las variables rm(list=ls()). Para tener informacion de una funcion se pone "?_funcion si parentesis_"
+
+> There are different types of classes of objetcs  
+
+  - character  
+  - numeric  
+  - integer  
+  - complex  
+  - Logical  
+
+La excepcion es una lista que puede tener cualquier objeto. 
+
+### __*Vectores, Matrices, listas, factores, dataframe...*__  {.tabset .tabset-pills}
+
+#### Vectores  
+  * Con la funcion c()  
+
+```{r}
+x<- c(0.5, 0.6) #Como si c significara concatenar
+print(x)
+```
+Tambien pueden tener nombres propios
+```{r}
+names(x)<-c("Food","Bar")
+x
+```
+En este caso, pueden haber distintos objetos (numericos, logicos, enteros, etc)
+
+  * Con la funcion vector() 
+
+```{r}
+x<-vector("numeric", length=10)
+x
+```
+***
+Para saber la clase entonces se usa *class()*
+```{r}
+class(x)
+```
+Se puede forzar la conversion entre clases de numeros. Por ejemplo:
+```{r}
+x<-0:6
+class(x)
+as.numeric(x)
+as.character(x)
+as.logical(x)
+```
+ 
+#### Listas
+```{r}
+x<-list(1, "a", TRUE, 1+4i) #Recuerda que los numeros que cambian son los indices de los vectores, tienen dobles corchetes cuadrados
+print(x)
+```
+Tambien pueden tener nombres
+```{r}
+x<-list(a=1,b= "a",c= TRUE,d= 1+4i)
+x
+```
+Para eliminar una lista se puede usar `unlist()`
+#### Matrices
+```{r}
+m<- matrix(1:6,nrow=2, ncol=3) # Se construye column wise
+print(m)
+dim(m)
+attributes(m) #Todo lo que se le pueda sacar
+m[1,] #Para extraer solo la primera fila
+
+```
+Tambien pueden tener nombres:
+```{r}
+dimnames(m) <- list(c("fila1","fila2"),c("col1","col2","col3")) #Se usa una listaaa
+m
+```
+
+ * Otra forma es redimensionar un vector
+```{r}
+m<-1:10
+dim(m) <- c(2,5) #dos filas, dos columnas
+m
+```
+ * Cbind-ing and rbind-ing
+```{r}
+x<-1:3
+y<-10:12
+cbind(x,y) # Los une por columnas
+print("Tambien se puede unir por filas")
+rbind(x,y)
+```
+
+#### Factors
+Para tener datos categoricos:
+```{r}
+x<-factor(c("yes","no","yes", "no"), levels = c("yes","no")) #Para determinar el orden de los niveles.
+
+x
+table(x) #Conteo
+class(x)
+```
+
+#### Data Frame
+```{r}
+x<-data.frame(food=1:4, bar=c(T,T,F,F))
+x
+nrow(x)
+ncol(x)
+```
+  * Para cambiar el nombre de las columnas  
+```{r}
+colnames(x)[c(1,2)]<-c("Name","Mortality")  
+x
+```
+
+
+### __*Functions*__ {.tabset .tabset-pills}    
+
+#### Forma general
+Para ver los argumentos de una funcion se usa args(Nombre de la funcion)
+```{r}
+above_10 <- function (x, n=10){
+  use <- x>n
+  x[use]
+  # Se puede especificar default values.
+}
+above_10(c(1,4,6,8,99))
+
+```
+#### Funciones anonimas
+Con la funcion _lapply_ o similares se pueden aplicar funciones creadas en el momento. _sapply_ simplifica los resultados, si todos los resultados son unitarios se retorna un vector.   
+```{r}
+x<-list(a=matrix(1:4, 2,2), b=matrix(1:6,3,2))
+print(x)
+lapply(x, function(elt) elt[,1])
+```
+Si se tiene una lista, se va a aplicar la funcion a toda la lista.  
+```{r}
+library(datasets)
+data(iris)
+iris[1:5,]
+lapply(iris,mean)
+
+```
+_apply_ se usa para evaluar una funcion en los margenes de un arreglo.
+```
+str(apply)
+function(X, margin, function, ...)
+```
+Por ejemplo:
+```{r}
+x<-matrix(rnorm(200),20,10)
+apply(x,2,mean) #dimension 2 is cols. El promedio se hace vertical
+apply(x,1,sum)  #Sum through the rows 
+```
+Hay funciones como rowsum, o colsum que pueden reducir el codigo.   
+
+_mapply_ is a multivariate apply of sorts.  
+```
+str(mapply)
+function(FUN,..., MoreArgs=NULL, SIMPLIFY=TRUE. USE.NAMES=TRUE)
+```
+  *  FUN is a function to apply
+  * ... contains arguments to apply over  
+  * MoreArgs is a list of other arguments to FUN
+  * SIMPLIFY indicates whether the result should be simplyfied  
+  
+Por ejemplo, en vez de usar `list(rep(1,4), rep(2,3), rep(3,2), rep(4,1))` se puede usar:
+```{r}
+mapply(rep,1:4,4:1)
+```
+_tapply_ is used to apply a function over subsets of a vector  
+```
+str(tapply)
+function(X, index, FUN=NUL,..., SIMPLIFY=TRUE )
+```
+  * X is a vector 
+  * INDEX is a factor or a list of factors
+  * FUN is a function to apply
+  * ... contains arguments to apply over  
+  * SIMPLIFY indicates whether the result should be simplyfied  
+```{r}
+x<-c(rnorm(10), runif(10),rnorm(10))
+f<-gl(3,10) #Genera los niveles de los factores gl(n,k) n es el numero de niveles y k el numero de replicas
+tapply(x,f,mean)
+print("Otro ejemplo")
+data("mtcars")
+mtcars[1:5,]
+tapply(mtcars$mpg,mtcars$cyl,mean)
+```
+
+_split_ takes a vector or other objetc and splits it into groups determined by a factor of list of factors
+```
+str(split)
+function(x, f, drop=FALSE,... )
+```
+  * x is a vector or data frame  
+  * f is a factores or a list of factors
+  * drop indicates whether empty factors levels should be dropped
+
+```{r}
+split(x,f) #siempre devuelve una lista. Se puede usar con otra function
+lapply(split(x,f),mean)
+```
+
+
+### __*Texto*__  
+<details>  
+  <summary> Click to expand! </summary>  
+ 
+  * Para convertir vectores a caracteres unidos
+```{r}
+paste(as.character(c(rep(0,times=3-length(1)),1)), collapse ="")
+```
+  * Para comparar dos strings  
+```{r}
+library(pracma)
+strcmpi("Hola","hola") #case insensitive
+strcmp("Hola","hola")  #case sensitive
+```
+  * Para poner todas las letras en minuscula
+```{r}
+tolower("HOLA")
+```
+  * Para separar de acuerdo a un indicador
+```{r}
+testName <- "HOLA.Como.Estas"
+strsplit(testName,"\\.")
+```
+  * Para sustituir un caracter
+```{r}
+gsub("[[:punct:]]"," ",testName) #removes all puntuaction
+gsub("[.]"," ",testName) #tambien se puede [-]
+```
+
+  * Metacharacters:
+^ inicio, $ final, [Bb], ^[Ii] am, ^[0-9][a-zA-Z], [^?.]$ (busca al final excluyendo ?. para eso se usa ^), ^[Gg]ood|[Bb]ad, ^([Gg]ood|[Bb]ad)
+```{r}
+gsub("[[:punct:]]"," ",testName) #removes all puntuaction
+gsub("[.]"," ",testName) #tambien se puede [-]
+```
+
+
+</details> 
 
 ### __*Estructuras de control*__ {.tabset .tabset-pills}
 
@@ -125,10 +380,6 @@ while(count<10) {
 <details>  
   <summary> Click to expand! </summary>  
   
-#### Connection with outside world  
-* file, opens a connection to a file
-* url, opens a connection to url  
-* gzfile and bzfile opens a connection with compresed files
 
 #### Subsetting   
 * $ is used to extract elements of a list or data frame by name
@@ -150,34 +401,21 @@ bad <-is.na(x)
 x[bad]
 x[!bad]
 ```
-Hay diferentes funciones para leer los datos:  
-
-  * read.table, read.csv  Son iguales, la unica difrencia es que _read.table_ el separador por defecto es un espacio y en _read.csv_ es una coma  
-* readLines, para leer lineas de texto    
-* source, Para leer R code files  
-* dget, para leer R code files  
-* load, para cargar los datos  
-* unserialize, para leer en forma binaria
-
 #### read.table  
-Cuando se van a leer bases de datos muy grandes, se pueden hacer unas optimizaciones: 
 
-  * Poner comment.char="" si no hay comentarios en el archivo  
-* Especificar colClasses. Una forma de encontrar las clases de cada columna es:
-```{r, eval=FALSE}
- initial<- read.table("Nombredelarchivo.txt", nrows=100)  
- classes <- sapply(initial,class)  
- tabAll< read.table("Nombredelarchivo.txt", colClasses=classes) 
-```
-  * Especificar nrows, se puede sobre estimar  
-* Se puede hacer el calculo de la memoria que va a gastar.
 
 </details>  
 
 ### __*Funciones utiles*__
 <div class="tab">
   <button class="tablinks" onmouseover="openCity(event, 'str')"><i>str</i></button>
+  <button class="tablinks" onmouseover="openCity(event, 'download.file')"><i>download.file</i></button>
+  <button class="tablinks" onmouseover="openCity(event, 'which')"><i>which</i></button>
   <button class="tablinks" onmouseover="openCity(event, 'summary')"><i>Summary</i></button>
+  <button class="tablinks" onmouseover="openCity(event, 'Names')"><i>Names</i></button>
+  <button class="tablinks" onmouseover="openCity(event, 'Folders')"><i>Folders and Files</i></button>
+  <button class="tablinks" onmouseover="openCity(event, 'Subsetting')"><i>Subsetting</i></button>
+  <button class="tablinks" onmouseover="openCity(event, 'Sequences')"><i>Sequences</i></button>
 </div>
 
 <div id="str" class="tabcontent">
@@ -193,6 +431,25 @@ str(airquality)
 ```
 </div>
 
+<div id="which" class="tabcontent">
+#### __*which*__  
+The `which()` function will return the position of the elements(i.e., row number/column number/array   index) in a logical vector which are TRUE. Unlike the other base R functions, the which() will accept only the arguments with typeof as logical while the others will give an error.  
+```{r}
+str(which)
+which(letters == "g")
+```
+</div>
+
+<div id="download.file" class="tabcontent">
+#### __*download.file*__  
+This function can be used to download a file from the Internet.
+```{r}
+str(download.file)
+```
+Si se quiere descargar:
+  * _imagenes_ se debe poner `mode ='wb'`
+</div>
+
 <div id="summary" class="tabcontent">
 #### __*summary*__  
 Produces a summary of the results  
@@ -202,6 +459,134 @@ x<-5
 summary(x)
 ```
 </div>
+
+<div id="Names" class="tabcontent">
+#### __*Names*__  
+Gives the names of cols and lists
+```{r}
+str(names)
+library(datasets)
+names(iris)
+```
+</div>
+
+<div id="Folders" class="tabcontent">
+### __*Folders and Files*__  
+
+#### *__Files__*  
+Connection with outside world  
+
+  * file, opens a connection to a file  
+* url, opens a connection to url  
+* gzfile and bzfile opens a connection with compresed files  
+* `file.exist` Check if files exist. Returns TRUE or FALSE  
+* `dir.create` Create directory if it doesnt exist.
+* `download.file` 
+
+```{r, echo=FALSE}
+str(download.file)
+```
+**Ejemplo**
+```{r,eval=FALSE}
+url <-"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv"
+destfile <-"Ejercicio_Semana3/US_communities.csv"
+download.file(url, destfile)
+```
+
+
+Hay diferentes funciones para leer los datos:  
+
+  * read.table, read.csv  Son iguales, la unica difrencia es que _read.table_ el separador por defecto es un espacio y en _read.csv_ es una coma  
+* readLines, para leer lineas de texto    
+* source, Para leer R code files  
+* dget, para leer R code files  
+* load, para cargar los datos  
+* unserialize, para leer en forma binaria
+* `read.table()` not so useful for big data.  
+    + If you are trying to read a .csv file you should use `sep =","`, `header=TRUE`.  
+    + `na.strings` set the character that represents a missing value  
+    + skip number of lines to skip before starting to read  
+    + Cuando se van a leer bases de datos muy grandes, se pueden hacer unas optimizaciones: 
+    + Poner comment.char="" si no hay comentarios en el archivo  
+    + Especificar colClasses. Una forma de encontrar las clases de cada columna es:
+    
+```{r, eval=FALSE}
+ initial<- read.table("Nombredelarchivo.txt", nrows=100)  
+ classes <- sapply(initial,class)  
+ tabAll< read.table("Nombredelarchivo.txt", colClasses=classes) 
+```
+
+    + Especificar nrows, se puede sobre estimar  
+    + Puede hacer el calculo de la memoria que va a gastar.
+
+    
+  
+  * reading excel files
+    + `library(xlsx)` es un paquete para leer excel. Tambien XLConnect tiene mas opciones    
+    + Se puede usar la funcion `read.xlsx`. Esta funcion permite leer columnas y filas especificas.
+    + para crear un archivo `write.xlsx`  
+    
+  * `data.table` es un paquete    
+    + library(data.table)  
+    + `tables()` todas las tablas del documento  
+    + **Importante** Para crear una copia de una tabla se debe hacer uso de la funcion `copy`
+
+</div>
+
+<div id="Subsetting" class="tabcontent">
+### __*Subsetting*__  
+To access date. Lest create a table:  
+```{r, comment=NA}
+library(data.table)
+DF=data.table(x=rnorm(9), y=rep(c("a","b","c"), each=3),z=rnorm(9))
+DF
+```
+Estas son difetentes formas de hacer subsetting
+```{r, comment=NA}
+DF[2,]
+DF[DF$y=="a",];# TAmbien sirve DF[DF$y %in% "a",]
+DF[c(2,3)] #Por defecto son filas
+DF[,list(mean(x), sum(z))] #Reconoce automaticamente las columnas
+DF[,w:=z^2] # Anade una nueva columna
+DF
+```
+**Importante** Para crear una copia de una tabla se debe hacer uso de la funcion `copy`.   
+Tambien, se pueden hacer operaciones: 
+```{r}
+DF[, m:={tmp<-(x+z); log2(tmp+5)}]; DF
+DF[,a:=x>0]; DF
+```
+  * __*Logicals ands and ors*__ 
+Se pueden hacer operaciones logicas
+```{r}
+DF[(DF$x<=0 & DF$y>11),];DF
+DF[(DF$x<=0 | DF$y>11),];DF
+```
+  * __*Sorting and order*__ 
+Para ordenar una variable `sort`
+```{r}
+sort(DF$x,decreasing = FALSE)
+```
+Para ordenar un data.frame
+```{r}
+DF[order(DF$x),]
+DF[order(DF$x,DF$y),] #si hay valores de x que son iguales entonces procede al orden por y
+```
+
+Tambien, se pueden ordenar utilizando la libreria `plyr` y la funcion `arrange`.
+</div>
+
+<div id="Sequences" class="tabcontent">
+### __*Sequences*__  
+How to create a sequence
+```{r}
+seq(1,10, by=2)
+seq(1,10,length=3)
+seq(along=c(1,3,8,25,100)) #create a vector with the length of 1,2
+
+```
+</div>
+
 
 <div class="clearfix"></div>
 
@@ -246,6 +631,151 @@ The function `sample` draws ramdomly from a specified set of sclara objects allo
 str(sample) # con repeat se puede obtener numeros repetidos
 set.seed(1)
 sample(1:10,4)
+```
+
+### __*Funciones estadistica*__
+<div class="tab">
+  <button class="tablinks" onmouseover="openCity(event, 'hist')"><i>hist</i></button>
+  <button class="tablinks" onmouseover="openCity(event, 'summary')"><i>Summary</i></button>
+  <button class="tablinks" onmouseover="openCity(event, 'Names')"><i>Names</i></button>
+</div>
+
+<div id="hist" class="tabcontent">
+#### __*hist*__  
+Display the histogram  
+```{r}
+str(hist)
+library(datasets)
+hist.iris <- as.numeric(iris$Sepal.Length)
+hist(hist.iris)
+
+```
+</div>
+
+<div id="summary" class="tabcontent">
+#### __*summary*__  
+Produces a summary of the results  
+```{r}
+str(summary)
+x<-5
+summary(x)
+```
+</div>
+
+<div id="Names" class="tabcontent">
+#### __*Names*__  
+Gives the names of cols and lists
+```{r}
+str(names)
+library(datasets)
+names(iris)
+```
+</div>
+
+<div class="clearfix"></div>
+
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+### __*dplyr Package*__ {.tabset .tabset-pills}
+#### Introduction
+Its useful for working with data frames.
+```{r, results ="hide"}
+library(dplyr)
+library(datasets)
+```
+#### Select
+```{r, echo=FALSE}
+str(select)
+```
+  * Para ver los datos de columnas
+```{r}
+head(select(iris, Sepal.Length:Petal.Length)) 
+```
+  * Para omitir los datos de una columna
+```{r}
+head(select(iris, -Sepal.Length))
+```
+#### Filter
+Subset rows given a condition.
+```{r, echo=FALSE}
+str(filter)
+```
+```{r}
+head(filter(iris, Petal.Width>0.2))
+```
+
+#### Arrange
+Order the rows
+```{r, echo=FALSE}
+str(arrange)
+```
+```{r}
+head(arrange(iris, Petal.Width)) #se puede usar desc(Petal.Width) para el orden descendiente
+tail(arrange(iris, Petal.Width))
+
+```
+
+#### Rename
+Rename cols
+```{r, echo=FALSE}
+str(rename)
+```
+```{r}
+head(rename(iris, Petal_Width=Petal.Width)) #se puede usar desc(Petal.Width) para el orden descendiente
+
+```
+#### Mutate
+Create or adds new variables
+```{r, echo=FALSE}
+str(mutate)
+```
+```{r}
+head(mutate(iris, Petal_std=Petal.Width-mean(Petal.Width))) #se puede usar desc(Petal.Width) para el orden descendiente
+
+```
+#### Group_by
+Group by categories. Es una especie de tabla dinamica.
+```{r, echo=FALSE}
+str(group_by)
+```
+```{r}
+group<-group_by(iris, Species) #se puede usar desc(Petal.Width) para el orden descendiente
+summarise(group, Petal_meanWidth=mean(Petal.Width), Max_Sepal_length=max(Sepal.Length))
+```
+
+#### Merge
+Merge with common id. `merge`, `join`, `join_all`
+```{r, echo=FALSE}
+str(group_by)
+```
+```{r}
+group<-group_by(iris, Species) #se puede usar desc(Petal.Width) para el orden descendiente
+summarise(group, Petal_meanWidth=mean(Petal.Width), Max_Sepal_length=max(Sepal.Length))
 ```
 
 
