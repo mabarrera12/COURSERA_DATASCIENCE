@@ -11,20 +11,20 @@ library(data.table)
 
 ## TEST
 # Read files.
-xtest <- read.table("./UCI HAR Dataset/test/X_test.txt")
-ytest <- read.table("./UCI HAR Dataset/test/y_test.txt")
+xtest <- read.table("./test/X_test.txt")
+ytest <- read.table("./test/y_test.txt")
 
 # Read features and assign them to xtest
-features_label <- read.table("./UCI HAR Dataset/features.txt")[,2]
+features_label <- read.table("./features.txt")[,2]
 setnames(xtest,features_label)
 
 # Read the activity labels
-Act_labels <- read.table("./UCI HAR Dataset/activity_labels.txt")[,2]
+Act_labels <- read.table("./activity_labels.txt")[,2]
 ytest[,2] <- Act_labels[ytest[,1]]
 setnames(ytest, c("Act_id","Activity"))
 
 # Read the subject test file
-subjecttest <- read.table("./UCI HAR Dataset/test/subject_test.txt")
+subjecttest <- read.table("./test/subject_test.txt")
 setnames(subjecttest, c("Subject"))
 
 # Features with mean or std
@@ -36,8 +36,8 @@ data_test <- cbind(subjecttest,ytest,xtest)
 
 ## TRAIN
 # Read files. 
-xtrain <- read.table("./UCI HAR Dataset/train/X_train.txt")
-ytrain <- read.table("./UCI HAR Dataset/train/y_train.txt")
+xtrain <- read.table("./train/X_train.txt")
+ytrain <- read.table("./train/y_train.txt")
 
 # Assign features to xtrain and y train
 setnames(xtrain,features_label)
@@ -45,7 +45,7 @@ ytrain[,2] <- Act_labels[ytrain[,1]]
 setnames(ytrain, c("Act_id","Activity"))
 
 # Read the subject test file
-subjecttrain <- read.table("./UCI HAR Dataset/train/subject_train.txt")
+subjecttrain <- read.table("./train/subject_train.txt")
 setnames(subjecttrain, c("Subject"))
 
 # Features with mean or std
@@ -63,5 +63,5 @@ data_full2   <- melt(data_full, id.vars = id_vars, measure.vars= measure_vars)
 
 library(reshape2)
 data_full3   <- dcast(data_full2, Subject + Activity ~ variable, mean)
-print(head(data_full3))
+write.table(data_full, file="Cleaned_data.txt", row.names = FALSE)
 
