@@ -1,0 +1,100 @@
+---
+title: "Prediction Assignment Writeup"
+author: "Alejandra Barrera"
+date: "9/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+## Prediction Assignment Writeup
+
+The goal of your project is to predict the manner in which they did the exercise. This is the "classe" variable in the training set. You may use any of the other variables to predict with. You should create a report describing how you built your model, how you used cross validation, what you think the expected out of sample error is, and why you made the choices you did. You will also use your prediction model to predict 20 different test cases.
+
+
+```{r, message = FALSE}
+#Downloading the data
+set.seed(1)
+tn_url <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+ts_url <-"https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+
+download.file(tn_url, "train.csv", method = "curl")
+download.file(ts_url, "test.csv", method = "curl")
+```
+### Loading the data 
+The first step, is load the data. The data are loaded in the train and test variables. 
+
+```{r}
+train <- read.csv("train.csv", na.strings = c("NA", "#DIV/0!"))
+test <- read.csv("test.csv", na.strings = c("NA", "#DIV/0!"))
+
+dim(train)
+table(train$classe)
+```  
+### Cleaning the data  
+
+The first 7 columns are unnecessary for predicting. Therefore, should be removed.
+
+```{r}
+train <- train[,-c(1,2,3,4,5,6,7)] #remove the first 7 columns that are unnecessary
+test <- test[,-c(1,2,3,4,5,6,7)]
+```
+
+Remove data with near zero variance
+```{r}
+train <- train[,colSums(is.na(train))== 0]
+test <- test[,colSums(is.na(test))== 0]
+```
+
+### Data partitioning
+We are going to use some libraries. The data will be partitioned using the 70% of the training set. A validation set is going to be builded using 30% of the data.  
+
+```{r}
+suppressPackageStartupMessages(library(caret))
+train_set <- createDataPartition(train$classe, p=0.7, list = F )
+train_full <- train[train_set,]
+train_val <- train[-train_set,]
+dim(train_full); #size of the training data
+dim(train_val) #size of the validation data
+```  
+
+### Prediction Model
+The chosen model is Random Forest. The model uses 10 trees. According to the definition The random forest is a classification algorithm consisting of many decisions trees. It uses bagging and feature randomness when building each individual tree to try to create an uncorrelated forest of trees whose prediction by committee is more accurate than that of any individual tree. Therefore, is useful for prediction in this case.
+
+```{r}
+suppressPackageStartupMessages(library(randomForest))
+
+fit <- randomForest(as.factor(classe) ~ ., data=train_full, ntrees=10, importance = TRUE)
+print(fit)
+```
+
+### Model Validation
+#### Training accuracy
+Our model, as you can see is going to perform perfectly in the training data set since it was the one used to train it. We can see an accuracy of 100%. 
+
+```{r}
+train_full$classe <- as.factor(train_full$classe)
+training_accuracy <- predict(fit, train_full)
+print(confusionMatrix(training_accuracy, train_full$classe))
+
+```
+
+#### Validation accuracy
+The validation set serves as an test set since the model was not trained using this set. The model performs with an accuracy of 99.27% which is really good. 
+
+```{r}
+train_val$classe <- as.factor(train_val$classe)
+validation_accuracy <- predict(fit, train_val)
+print(confusionMatrix(validation_accuracy, train_val$classe))
+```
+
+### Test accuracy
+Now we know that the model predicts with great accuracy, therefore, we are applying it to the test data. 
+
+```{r}
+test_accuracy <- predict(fit, test)
+test_accuracy
+```
